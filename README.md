@@ -39,7 +39,7 @@ GET / {brand} - Fetch devices by brand.
 
 POST / - Create a new device.
 
-PUT / - Fully and/or par:ally update an existing device.
+PUT / - Fully and/or partially update an existing device.
 
 DELETE / {id} - Delete a single device.
 ```
