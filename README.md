@@ -12,7 +12,9 @@ This repository contains a  a REST API capable of persisting and managing device
 
 ## Installation
 
-1. Open the project in the IDE of your choice.
+Clone the repository:
+
+git clone https://github.com/sicabralBr/1global-backend-java-challenge/tree/master
 
 2. Install dependencies with Maven
    

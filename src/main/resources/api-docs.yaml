@@ -1,0 +1,378 @@
+openapi: 3.0.4
+info:
+  title: Swagger 1Global Backend Challenge - OpenAPI 3.0
+  description: |-
+    This is a REST API capable of persisting and managing device resources.
+
+    Some useful links:
+    - [The Application repository](https://github.com/sicabralBr/1global-backend-java-challenge)
+
+  termsOfService: https://swagger.io/terms/
+  contact:
+    email: apiteam@swagger.io
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.12
+externalDocs:
+  description: Find out more about Swagger
+  url: https://swagger.io
+servers:
+  - url: http://localhost:8080
+tags:
+  - name: Device resources
+    description: Managing device resources
+    externalDocs:
+      description: Find out more
+      url: https://www.1global.com/
+paths:
+  /device/updateDevice/{Id}:
+    put:
+      tags:
+        - device
+      summary: Update an existing device.
+      description: Fully and/or partially update an existing device.
+      operationId: updateDevice
+      parameters:
+        - name: Id
+          in: path
+          description: Fully and/or partially update an existing device.
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        description: Update an existent device
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Device'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/Device'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Device'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Device'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Device'
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: Device not found
+        '422':
+          description: Validation exception
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+      security:
+        - Devicestore_auth:
+            - write:devices
+            - read:devices
+  /device/createDevice:
+    post:
+      tags:
+        - device
+      summary: Add a new device.
+      description: Add a new device.
+      operationId: addDevice
+      requestBody:
+        description: Create a new Device
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Device'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/Device'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Device'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Device'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Device'
+        '400':
+          description: Invalid input
+        '422':
+          description: Validation exception
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+      security:
+        - Devicestore_auth:
+            - write:devices
+            - read:devices
+  /device/findByState/{state}:
+    get:
+      tags:
+        - device
+      summary: Finds devices by state.
+      description: Fetch devices by state.
+      operationId: findByState
+      parameters:
+        - name: state
+          in: path
+          description: State values that need to be considered for filter
+          required: true
+          schema:
+            type: string
+            default: available
+            enum:
+              - available
+              - in_use
+              - inactive
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Device'
+            application/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Device'
+        '400':
+          description: Invalid status value
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+      security:
+        - Devicestore_auth:
+            - write:Devices
+            - read:Devices
+  /device/findByBrand:
+    get:
+      tags:
+        - device
+      summary: Finds Devices by brand.
+      description: Fetch devices by brand.
+      operationId: findByBrand
+      parameters:
+        - name: brand
+          in: query
+          description: Tags to filter by
+          required: true
+          schema:
+            type: string
+            items:
+              type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Device'
+            application/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Device'
+        '400':
+          description: Invalid tag value
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+      security:
+        - Devicestore_auth:
+            - write:Devices
+            - read:Devices
+  /device/{Id}:
+    get:
+      tags:
+        - device
+      summary: Find Device by ID.
+      description: Returns a single Device.
+      operationId: getDeviceById
+      parameters:
+        - name: Id
+          in: path
+          description: ID of Device to return
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Device'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Device'
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: Device not found
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+      security:
+        - api_key: []
+        - Devicestore_auth:
+            - write:Devices
+            - read:Devices
+  /device:
+    get:
+      tags:
+        - device
+      summary: Fetch all devices.
+      description: Search all devices.
+      operationId: device
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Device'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Device'
+        '400':
+          description: Invalid input
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+      security:
+        - Devicestore_auth:
+            - write:Devices
+            - read:Devices
+  /device/deleteDevice/{Id}:
+    delete:
+      tags:
+        - device
+      summary: Deletes a Device.
+      description: Delete a Device.
+      operationId: deleteDevice
+      parameters:
+        - name: api_key
+          in: header
+          description: ''
+          required: false
+          schema:
+            type: string
+        - name: Id
+          in: path
+          description: Device id to delete
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Device deleted
+        '400':
+          description: Invalid Device value
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+      security:
+        - Devicestore_auth:
+            - write:Devices
+            - read:Devices
+
+components:
+  schemas:
+    Device:
+      required:
+        - name
+        - devices
+      type: object
+      properties:
+        name:
+          type: string
+          example: doggie
+        brand:
+          type: string
+          example: Motorola
+        state:
+          type: string
+          description: Device status in the store
+          enum:
+            - available
+            - in_use
+            - inactive
+        creation time:
+          type: string
+          example: 07/15/2025
+      xml:
+        name: Device
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+      required:
+        - code
+        - message
+  requestBodies:
+    Device:
+      description: Device object that needs to be added to the store
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Device'
+        application/xml:
+          schema:
+            $ref: '#/components/schemas/Device'
+  securitySchemes:
+    Devices_auth:
+      type: oauth2
+      flows:
+        implicit:
+          authorizationUrl: https://device.swagger.io/oauth/authorize
+          scopes:
+            "write:Devices": modify Devices in your account
+            "read:Devices": read your Devices
+    api_key:
+      type: apiKey
+      name: api_key
+      in: header
